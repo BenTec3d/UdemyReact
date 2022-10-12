@@ -12,17 +12,17 @@ const AddUser = props => {
     const addUserHandler = event => {
         event.preventDefault();
 
-        if (enteredName.trim().length === 0){
+        if (enteredName.trim().length === 0) {
             props.onError("Invalid Name!", "Names can not be whitespace only.")
-            return; 
+            return;
         }
 
-        if (enteredAge < 18 || enteredAge >99){
+        if (enteredAge < 18 || enteredAge > 99) {
             props.onError("Invalid Age!", "Please enter an age between 18 and 99.")
-            return; 
+            return;
         }
 
-        props.onAddUser({name: enteredName.trim(), age: enteredAge, id: props.nextId});
+        props.onAddUser({ name: enteredName.trim(), age: enteredAge, id: props.nextId });
         setEnteredName("");
         setEnteredAge("");
     };
