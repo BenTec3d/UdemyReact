@@ -13,7 +13,7 @@ const AddUser = props => {
         event.preventDefault();
 
         if (enteredName.trim().length === 0) {
-            props.onError("Invalid Name!", "Names can not be whitespace only.")
+            props.onError("Invalid Name!", "Names can not be empty or whitespace only.")
             return;
         }
 
