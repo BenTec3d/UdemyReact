@@ -28,11 +28,11 @@ const AddUser = props => {
 
     const nameChangeHandler = event => {
         setEnteredName(event.target.value);
-    }
+    };
 
     const ageChangeHandler = event => {
         setEnteredAge(event.target.value);
-    }
+    };
 
     return (
         <Card className={classes.input}>
