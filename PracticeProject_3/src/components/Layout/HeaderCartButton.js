@@ -10,7 +10,7 @@ const HeaderCartButton = props => {
             <span>Your Cart</span>
             <span className={classes.badge}>3</span>
         </button>
-    )
+    );
 };
 
 export default HeaderCartButton;

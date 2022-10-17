@@ -8,7 +8,7 @@ const Meals = () => {
             <MealsSummary />
             <AvailableMeals />
         </React.Fragment>
-    )
+    );
 };
 
 export default Meals;

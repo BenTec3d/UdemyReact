@@ -6,7 +6,7 @@ const MealItemForm = props => {
             <input />
             <button>Add</button>
         </form>
-    )
+    );
 };
 
 export default MealItemForm;
