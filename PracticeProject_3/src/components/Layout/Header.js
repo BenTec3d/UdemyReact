@@ -15,7 +15,7 @@ const Header = () => {
                 <img src={mealsImage} alt="A table full of food."></img>
             </div>
         </React.Fragment>
-    )
+    );
 };
 
 export default Header;
