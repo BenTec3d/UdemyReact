@@ -8,7 +8,7 @@ import classes from "./Cart.module.css";
 const Cart = props => {
     const cartCtx = useContext(CartContext);
 
-    const formattedTotalAmount = `${cartCtx.totalAmount.toFixed(2)} €`;
+    const formattedTotalAmount = `${Math.abs(cartCtx.totalAmount).toFixed(2)} €`;
     const cartHasItems = cartCtx.items.length > 0;
 
     const cartItemAddHandler = item => {
