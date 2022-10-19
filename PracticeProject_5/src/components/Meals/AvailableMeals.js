@@ -6,8 +6,11 @@ import MealItem from "./MealItem/MealItem";
 
 const AvailableMeals = () => {
     const [mealsList, setMealsList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        setIsLoading(true);
+
         const fetchMeals = async () => {
             const response = await fetch("https://udemyreact-1714c-default-rtdb.europe-west1.firebasedatabase.app/meals.json");
             const responseData = await response.json();
@@ -20,7 +23,7 @@ const AvailableMeals = () => {
                     ...responseData[key]
                 });
             }
-
+            
             setMealsList(fetchedMeals.map(meal =>
                 <MealItem
                     key={meal.id}
@@ -32,14 +35,14 @@ const AvailableMeals = () => {
         }
 
         fetchMeals();
+        setIsLoading(false);
     }, []);
 
     return (
         <section className={classes.meals}>
             <Card>
-                <ul>
-                    {mealsList}
-                </ul>
+                {isLoading && <p className={classes.loading}>Loading meals...</p>}
+                {!isLoading && <ul>{mealsList}</ul>}
             </Card>
         </section>
     );
