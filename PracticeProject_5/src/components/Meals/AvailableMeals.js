@@ -7,12 +7,16 @@ import MealItem from "./MealItem/MealItem";
 const AvailableMeals = () => {
     const [mealsList, setMealsList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [httpError, setHttpError] = useState();
 
     useEffect(() => {
-        setIsLoading(true);
-
         const fetchMeals = async () => {
             const response = await fetch("https://udemyreact-1714c-default-rtdb.europe-west1.firebasedatabase.app/meals.json");
+
+            if (!response.ok) {
+                throw new Error("Something went wrong!");
+            }
+
             const responseData = await response.json();
 
             const fetchedMeals = [];
@@ -23,7 +27,7 @@ const AvailableMeals = () => {
                     ...responseData[key]
                 });
             }
-            
+
             setMealsList(fetchedMeals.map(meal =>
                 <MealItem
                     key={meal.id}
@@ -34,14 +38,25 @@ const AvailableMeals = () => {
             ));
         }
 
-        fetchMeals();
-        setIsLoading(false);
+        const tryFetchMeals = async () => {
+            try {
+                setIsLoading(true);
+                await fetchMeals();
+            } catch (error) {
+                setHttpError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        tryFetchMeals();
     }, []);
 
     return (
         <section className={classes.meals}>
             <Card>
-                {isLoading && <p className={classes.loading}>Loading meals...</p>}
+                {httpError && <p className={classes.errorStatus}>{httpError}</p>}
+                {isLoading && <p className={classes.loadingStatus}>Loading meals...</p>}
                 {!isLoading && <ul>{mealsList}</ul>}
             </Card>
         </section>
