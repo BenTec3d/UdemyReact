@@ -1,5 +1,10 @@
-.loading {
+.loadingStatus {
   text-align: center;
+}
+
+.errorStatus {
+  text-align: center;
+  color: red;
 }
 
 .meals {
