@@ -26,7 +26,13 @@ const Cart = props => {
     };
 
     const onOrderSubmit = userData => {
-        //Send http request here
+        fetch("https://udemyreact-1714c-default-rtdb.europe-west1.firebasedatabase.app/orders.json", {
+            method: "Post",
+            body: JSON.stringify({
+                user: userData,
+                orderedItems: cartCtx.items
+            })
+        });
 
         cartCtx.clearCart();
         props.onClose();
