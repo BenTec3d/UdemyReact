@@ -25,7 +25,9 @@ const Cart = props => {
         setShowCheckout(true);
     };
 
-    const onOrderSubmit = event => {
+    const onOrderSubmit = userData => {
+        //Send http request here
+
         cartCtx.clearCart();
         props.onClose();
     };
