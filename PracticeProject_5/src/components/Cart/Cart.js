@@ -25,6 +25,11 @@ const Cart = props => {
         setShowCheckout(true);
     };
 
+    const onOrderSubmit = event => {
+        cartCtx.clearCart();
+        props.onClose();
+    };
+
     const cartItems = (
         <ul className={classes.cartItems}>
             {cartCtx.items.map(item => <CartItem
@@ -52,7 +57,7 @@ const Cart = props => {
                 <span>Total Amount</span>
                 <span>{formattedTotalAmount}</span>
             </div>
-            {showCheckout && <Checkout onClose={props.onClose} />}
+            {showCheckout && <Checkout onClose={props.onClose} onSubmit={onOrderSubmit}/>}
             {!showCheckout && modalActions}
         </Modal >
     );

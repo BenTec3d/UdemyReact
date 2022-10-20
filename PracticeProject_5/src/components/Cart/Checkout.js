@@ -1,22 +1,16 @@
-import { useContext } from "react";
-
 import useInput from "../../hooks/useInput.js";
-import CartContext from "../../store/cartContext";
 import classes from "./Checkout.module.css";
 
 const isNotEmpty = value => value.trim().length > 0;
 const isFiveCharacters = value => value.trim().length === 5;
 
 const Checkout = props => {
-    const cartCtx = useContext(CartContext);
-
     const {
         value: nameInputValue,
         isValid: nameInputIsValid,
         hasError: nameInputHasError,
         valueChangedHandler: nameInputValueChangedHandler,
         blurChangedHandler: nameInputBlurChangedHandler,
-        reset: nameInputReset
     } = useInput(isNotEmpty);
 
     const {
@@ -25,7 +19,6 @@ const Checkout = props => {
         hasError: streetInputHasError,
         valueChangedHandler: streetInputValueChangedHandler,
         blurChangedHandler: streetInputBlurChangedHandler,
-        reset: streetInputReset
     } = useInput(isNotEmpty);
 
     const {
@@ -34,7 +27,6 @@ const Checkout = props => {
         hasError: postalInputHasError,
         valueChangedHandler: postalInputValueChangedHandler,
         blurChangedHandler: postalInputBlurChangedHandler,
-        reset: postalInputReset
     } = useInput(isFiveCharacters);
 
     const {
@@ -43,7 +35,6 @@ const Checkout = props => {
         hasError: cityInputHasError,
         valueChangedHandler: cityInputValueChangedHandler,
         blurChangedHandler: cityInputBlurChangedHandler,
-        reset: cityInputReset
     } = useInput(isNotEmpty);
 
     const nameInputClasses = nameInputHasError ? classes.control + " " + classes.invalid : classes.control;
@@ -53,7 +44,7 @@ const Checkout = props => {
 
     const formIsValid = nameInputIsValid && streetInputIsValid && postalInputIsValid && cityInputIsValid;
 
-    const formSubmitHandler = event => {
+    const submitFormHandler = event => {
         event.preventDefault();
 
         nameInputBlurChangedHandler();
@@ -63,14 +54,11 @@ const Checkout = props => {
 
         if (!formIsValid) return;
 
-        //Send order to server here
-
-        cartCtx.clearCart();
-        props.onClose();
+        props.onSubmit();
     }
 
     return (
-        <form className={classes.form} onSubmit={formSubmitHandler}>
+        <form className={classes.form} onSubmit={submitFormHandler}>
             <div className={nameInputClasses}>
                 <label htmlFor="name">Your Name</label>
                 <input type="text" id="name" value={nameInputValue} onChange={nameInputValueChangedHandler} onBlur={nameInputBlurChangedHandler}></input>
