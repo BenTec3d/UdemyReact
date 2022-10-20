@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import CartItem from "./CartItem";
 import CartContext from "../../store/cartContext";
@@ -8,6 +8,9 @@ import classes from "./Cart.module.css";
 
 const Cart = props => {
     const [showCheckout, setShowCheckout] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [httpError, setHttpError] = useState();
     const cartCtx = useContext(CartContext);
 
     const formattedTotalAmount = `${Math.abs(cartCtx.totalAmount).toFixed(2)} €`;
@@ -25,17 +28,37 @@ const Cart = props => {
         setShowCheckout(true);
     };
 
-    const onOrderSubmit = userData => {
-        fetch("https://udemyreact-1714c-default-rtdb.europe-west1.firebasedatabase.app/orders.json", {
-            method: "Post",
-            body: JSON.stringify({
-                user: userData,
-                orderedItems: cartCtx.items
-            })
-        });
+    const closeModalTimer = () => {
+        setTimeout(() => {
+            props.onClose();
+        }, 3000);
+    };
 
-        cartCtx.clearCart();
-        props.onClose();
+    const onOrderSubmit = async (userData) => {
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch("https://udemyreact-1714c-default-rtdb.europe-west1.firebasedatabase.app/orders.json", {
+                method: "Post",
+                body: JSON.stringify({
+                    user: userData,
+                    orderedItems: cartCtx.items
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Something went wrong!");
+            }
+
+            setSubmitSuccess(true);
+            cartCtx.clearCart();
+            closeModalTimer();
+
+        } catch (error) {
+            setHttpError(error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const cartItems = (
@@ -58,15 +81,30 @@ const Cart = props => {
         </div>
     );
 
-    return (
-        <Modal onClose={props.onClose}>
+    const cartModalContent = (
+        <React.Fragment>
             {cartItems}
             <div className={classes.total}>
                 <span>Total Amount</span>
                 <span>{formattedTotalAmount}</span>
             </div>
-            {showCheckout && <Checkout onClose={props.onClose} onSubmit={onOrderSubmit}/>}
+            {showCheckout && <Checkout onClose={props.onClose} onSubmit={onOrderSubmit} />}
             {!showCheckout && modalActions}
+        </React.Fragment>
+    );
+
+    const isSubmittingModalContent = <p>Sending order data...</p>;
+
+    const submitSuccessModalContent = <p>Successfully sent the order!</p>;
+
+    const errorModalContent = <p>{httpError}</p>;
+
+    return (
+        <Modal onClose={props.onClose}>
+            {httpError && errorModalContent}
+            {!httpError && !isSubmitting && !submitSuccess && cartModalContent}
+            {!httpError && isSubmitting && isSubmittingModalContent}
+            {!httpError && !isSubmitting && submitSuccess && submitSuccessModalContent}
         </Modal >
     );
 };
