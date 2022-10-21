@@ -17,12 +17,12 @@ const cartSlice = createSlice({
             state.isVisible = !state.isVisible;
         },
         addItem: (state, action) => {
-            if (state.items.some(item => item.title === action.payload.title)) {
-                const index = state.items.findIndex(item => item.title === action.payload.title);
-                state.items[index].quantity++;
+            const index = state.items.findIndex(item => item.title === action.payload.title);
+            if (index === -1) {
+                state.items.push(action.payload);
                 return;
             }
-            state.items.push(action.payload);
+            state.items[index].quantity++;
         },
         removeItem: (state, action) => {
             const index = state.items.findIndex(item => item.title === action.payload.title);
